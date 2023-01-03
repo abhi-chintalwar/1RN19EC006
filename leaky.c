@@ -1,14 +1,14 @@
 #include<stdio.h>
 #define bucketsize 1000
-#define n 5 // user defined function to output the contents of bucket at a constant rate
+#define n 5 
 void bucketoutput(int *bucket,int op)
 {
-if(*bucket > 0 && *bucket > op) // if the no. of bytes in thebucket >output rate
+if(*bucket > 0 && *bucket > op) 
 {
-*bucket= *bucket-op; //no. of bytes in bucket – output rate
+*bucket= *bucket-op; 
 printf("\n%d-outputed remaining is %d",op,*bucket);
 }
-else if(*bucket > 0) // if the bucket is not empty
+else if(*bucket > 0) 
 {
 printf("\n remaining data output = %d",*bucket);
 *bucket=0;
@@ -16,15 +16,15 @@ printf("\n remaining data output = %d",*bucket);
 }
 int main()
 {
-int op,newpack,oldpack=0,wt,i,j,bucket=0; // op – ouput rate, wt- waitingtime, bucket- no.of bytes in the bucket at any point of time
-printf("enter output rate"); // input the output rate
+int op,newpack,oldpack=0,wt,i,j,bucket=0; 
+printf("enter output rate");
 scanf("%d",&op);
 for(i=1;i<=n;i++)
 {
-newpack=rand()%500; //new packet with random size is generated
+newpack=rand()%500;
 printf("\n\n new packet size = %d",newpack);
 newpack=oldpack+newpack;
-wt=rand()%5; // random waiting time is generated
+wt=rand()%5;
 if(newpack<bucketsize)
 bucket=newpack;
 else
@@ -34,7 +34,6 @@ bucket=oldpack;
 }
 printf("\nthe data in bucket = %d",bucket);
 printf("\n the next packet will arrive after = %d sec",wt);
-// calling output rate function with wait time
 for(j=0;j<wt;j++)
 {
 bucketoutput(&bucket,op);
@@ -46,4 +45,3 @@ while(bucket>0)
 bucketoutput(&bucket,op);
 return 0;
 }
-
