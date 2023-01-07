@@ -1,0 +1,69 @@
+csh
+source /home/installs/cshrc
+gedit cds.lib
+Define design_lib
+gedit hdl.var
+Define WORK design_lib
+Define NCELABOPTS-messages
+mkdir design.lib
+gedit file_name.v
+gedit file_testbench.v
+nclaunch&
+
+#COMBINATIONAL CKT#
+
+genus
+read_lib /home/installs/FOUNDRY/digital/45nm/dig/lib/slow.lib
+set_db lef_library {/home/installs/FOUNDRY/digital/45nm/dig/lef/gsclib045_macro.lef
+/home/installs/FOUNDRY/digital/45nm/dig/lef/gsclib045_tech.lef}
+
+read_hdl filename.v
+elaborate
+set_input_delay -max 0.2 [get_ports "a"]
+set_input_delay -max 0.2 [get_ports "b"]
+set_output_delay -max 0.2 [get_ports "y"]
+
+set_db syn_generic_effort medium
+set_db syn_map_effort medium
+set_db syn_opt_effort medium
+syn_generic // Translation: converts program to basic gates
+syn_map // Mapping: converts logic to basic gates
+syn_opt //optimization
+report_power >filename_report.rpt
+report_area >filename_area.rpt
+report_gates >filename.rpt
+report_timing -unconstrained >filename_timing.rpt
+gui_show
+
+#SEQUENTIAL CKT#
+
+genus
+read_lib /home/installs/FOUNDRY/digital/45nm/dig/lib/slow.lib
+
+set_db lef_library {/home/installs/FOUNDRY/digital/45nm/dig/lef/gsclib045_macro.lef
+/home/installs/FOUNDRY/digital/45nm/dig/lef/gsclib045_tech.lef}
+read_hdl filename.v
+elaborate
+
+create_clock -name clk -period 2 -waveform {0 1} [get_ports "clk"]
+set_clock_transition -rise 0.1 [get_clocks "clk"]
+set_clock_transition -fall 0.1 [get_clocks "clk"]
+set_clock_uncertainty 0.01 [get_ports "clk"]
+set_input_delay -max 0.2 [get_ports "j"] -clock [get_clocks "clk"]
+set_input_delay -max 0.2 [get_ports "k"] -clock [get_clocks "clk"]
+set_input_delay -max 0.2 [get_ports "j"]
+set_input_delay -max 0.2 [get_ports "k"]
+set_output_delay -max 0.2 [get_ports "q"]
+set_output_delay -max 0.2 [get_ports "qb"]
+
+set_db syn_generic_effort medium
+set_db syn_map_effort medium
+set_db syn_opt_effort medium
+syn_generic // Translation: converts program to basic gates
+syn_map // Mapping: converts logic to basic gates
+syn_opt //optimization
+report_power >jkff_report.rpt
+report_area >jkff_area.rpt
+report_gates >jkff_gates.rpt
+report_timing -unconstrained >jkff_timing.rpt
+gui_show
