@@ -1,0 +1,23 @@
+module dff(d,clk,q,qb);
+input d,clk;
+output q,qb;
+reg q,qb;
+always@(posedge clk)
+begin
+q=d;
+qb=~d;
+end
+endmodule
+
+
+module dfftest;
+reg clk,d;
+wire q,qb;
+dff d1(d,clk,q,qb);
+initial
+begin clk = 1'b0; d=1’b0; end
+always
+#5 clk=~clk;
+initial
+#10 d=1'b0;
+endmodule

@@ -1,0 +1,32 @@
+#D#
+
+module DLatch( Q,Qbar,D,en,Reset);
+output reg Q;
+output Qbar;
+input D,en,Reset;
+assign Reset = ~D;
+always @(en)
+begin
+if (Reset == 1'b1) //If at reset
+Q <= 1'b0;
+else
+Q <= D;
+end
+assign Qbar = ~Q;
+endmodule
+
+
+module dlatch_tb;
+reg e,reset;
+reg d;
+wire q,qb;
+dlatch u1(q,qb,d,e,reset);
+initial
+begin
+d = 0; reset=1; e = 0;
+end
+always #8 e=~e;
+always #5 d=~d;
+initial
+ #20 reset =0;
+endmodule

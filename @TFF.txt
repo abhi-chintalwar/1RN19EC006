@@ -1,0 +1,30 @@
+module tff(clk,t,q,qb);
+input clk,t;
+output q,qb;
+reg q=0,qb=1;
+always @(posedge clk)
+begin
+if (t==0)
+ q=q;
+else
+ q=~q;
+qb=~q;
+end
+ endmodule
+
+
+module tfftest;
+reg clk,t;
+wire q,qb;
+tff t1(clk,t,q,qb);
+initial clk=1'b0;
+always #5 clk=~clk;
+initial
+begin
+t=1'b0;
+#10 t=1'b1;
+#20 t=1'b1;
+#20 t=1'b0;
+#20;
+end
+endmodule

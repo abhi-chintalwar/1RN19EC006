@@ -1,0 +1,32 @@
+module counter(clk,rst,m,count);
+input clk,rst,m;
+output reg [3:0]count;
+always@(posedge clk or negedge rst)
+begin
+if(!rst)
+count=0;
+if(m)
+count=count+1;
+else
+count=count-1;
+end
+endmodule
+
+
+module counter_test;
+reg clk, rst,m;
+wire [3:0]q;
+counter C1 (clk,rst,m,count);
+initial
+begin
+clk=1’b0; rst=1’b0; m=1’b0;
+end
+always
+#5 clk=~clk;
+initial
+begin
+#10 rst=1’b1; m=1’b1
+#120 m=1’b0;
+#100;
+end
+endmodule
