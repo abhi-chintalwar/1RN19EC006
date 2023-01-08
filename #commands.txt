@@ -1,7 +1,7 @@
 csh
 source /home/installs/cshrc
 gedit cds.lib
-Define design_lib
+Define design_lib ./design.lib
 gedit hdl.var
 Define WORK design_lib
 Define NCELABOPTS-messages
