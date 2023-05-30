@@ -44,3 +44,76 @@ CREATE (s)-[:INTERNSHIP_AT]->(c)
 
 MATCH (s:Student {name: 'Kelly'}), (c:Company {place: 'Place 3'})
 CREATE (s)-[:INTERNSHIP_AT]->(c)
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Neo4j Visualization with Vis.js</title>
+  <style type="text/css">
+    #visualization {
+      height: 600px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="visualization"></div>
+  <script src="https://unpkg.com/vis-network@10.8.1/dist/vis-network.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="your_script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+// Create a new Vis.js DataSet for nodes and edges
+var nodes = new vis.DataSet();
+var edges = new vis.DataSet();
+
+// Connect to Neo4j and retrieve data
+var driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('username', 'password'));
+var session = driver.session();
+session.run('MATCH (n)-[r]->(m) RETURN n, r, m')
+  .then(function(result) {
+    result.records.forEach(function(record) {
+      // Create a Vis.js node object from Neo4j node data
+      var neo4jNode = record.get('n');
+      var visNode = {
+        id: neo4jNode.identity.toString(),
+        label: neo4jNode.labels[0],
+        title: JSON.stringify(neo4jNode.properties),
+      };
+      nodes.add(visNode);
+
+      // Create a Vis.js edge object from Neo4j relationship data
+      var neo4jRelationship = record.get('r');
+      var visEdge = {
+        id: neo4jRelationship.identity.toString(),
+        from: neo4jRelationship.start.toString(),
+        to: neo4jRelationship.end.toString(),
+        label: neo4jRelationship.type,
+        title: JSON.stringify(neo4jRelationship.properties),
+      };
+      edges.add(visEdge);
+    });
+
+    // Create a network using the container and data
+    var container = document.getElementById('visualization');
+    var data = { nodes: nodes, edges: edges };
+    var options = {}; // Customize the visualization options as needed
+    var network = new vis.Network(container, data, options);
+  })
+  .catch(function(error) {
+    console.error('Error connecting to Neo4j:', error);
+  })
+  .finally(function() {
+    session.close();
+    driver.close();
+  });
+
+
