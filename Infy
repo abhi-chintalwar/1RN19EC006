@@ -117,3 +117,173 @@ session.run('MATCH (n)-[r]->(m) RETURN n, r, m')
   });
 
 
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Neo4j Visualization with vis.js</title>
+  <style type="text/css">
+    #visualization {
+      width: 100%;
+      height: 500px;
+    }
+  </style>
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+<body>
+  <div id="visualization"></div>
+
+  <script type="text/javascript">
+    // Create a new network instance
+    var container = document.getElementById("visualization");
+    var data = {
+      nodes: [],
+      edges: []
+    };
+
+    // Neo4j connection configuration
+    var config = {
+      container: container,
+      serverUrl: "bolt://localhost:7687",
+      serverUser: "neo4j",
+      serverPassword: "your_password",
+      labels: {
+        "Student": {
+          caption: "name"
+        }
+      },
+      relationships: {
+        "INTERNSHIP_AT": {
+          thickness: "weight"
+        }
+      }
+    };
+
+    // Connect to Neo4j and retrieve data
+    var driver = neo4j.v1.driver(config.serverUrl, neo4j.v1.auth.basic(config.serverUser, config.serverPassword));
+    var session = driver.session();
+    var cypherQuery = 'MATCH (n) RETURN n';
+    session.run(cypherQuery)
+      .then(function(result) {
+        result.records.forEach(function(record) {
+          var node = record.get("n");
+          var nodeId = node.identity.toString();
+          var nodeLabel = node.labels[0];
+          var nodeProps = node.properties;
+          data.nodes.push({ id: nodeId, label: nodeLabel, title: nodeProps.name });
+
+          var relationships = node.relationships;
+          relationships.forEach(function(relationship) {
+            var relationshipId = relationship.identity.toString();
+            var relationshipType = relationship.type;
+            var relationshipProps = relationship.properties;
+            var sourceNodeId = relationship.start.toString();
+            var targetNodeId = relationship.end.toString();
+            data.edges.push({ id: relationshipId, from: sourceNodeId, to: targetNodeId, label: relationshipType, title: relationshipProps.weight });
+          });
+        });
+
+        // Create the network visualization
+        var options = {};
+        var network = new vis.Network(container, data, options);
+      })
+      .catch(function(error) {
+        console.error("Error retrieving data from Neo4j: ", error);
+      })
+      .finally(function() {
+        session.close();
+        driver.close();
+      });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+CREATE (:Student {name: "John Doe", college: "ABC University", place: "City A"})
+CREATE (:Student {name: "Jane Smith", college: "XYZ College", place: "City B"})
+CREATE (:Student {name: "David Johnson", college: "PQR Institute", place: "City C"})
+CREATE (:Student {name: "Sarah Brown", college: "LMN University", place: "City D"})
+CREATE (:Student {name: "Michael Wilson", college: "EFG College", place: "City E"})
+CREATE (:Student {name: "Emily Davis", college: "UVW Institute", place: "City F"})
+CREATE (:Student {name: "Daniel Taylor", college: "HIJ University", place: "City G"})
+CREATE (:Student {name: "Olivia Lee", college: "KLM College", place: "City H"})
+CREATE (:Student {name: "Matthew Clark", college: "NOP Institute", place: "City I"})
+CREATE (:Student {name: "Sophia Lewis", college: "QRS University", place: "City J"})
+CREATE (:Student {name: "James Martinez", college: "TUV College", place: "City K"})
+CREATE (:Student {name: "Ava Hall", college: "XYZ Institute", place: "City L"})
+CREATE (:Student {name: "William Mitchell", college: "ABC University", place: "City M"})
+CREATE (:Student {name: "Isabella Scott", college: "PQR College", place: "City N"})
+CREATE (:Student {name: "Daniel Thompson", college: "LMN Institute", place: "City O"})
+CREATE (:Student {name: "Mia Walker", college: "EFG University", place: "City P"})
+CREATE (:Student {name: "Alexander Adams", college: "UVW College", place: "City Q"})
+CREATE (:Student {name: "Sofia Hill", college: "HIJ Institute", place: "City R"})
+CREATE (:Student {name: "Ethan Turner", college: "KLM University", place: "City S"})
+CREATE (:Student {name: "Charlotte Baker", college: "NOP College", place: "City T"})
+
+MATCH (s1:Student),(s2:Student)
+WHERE s1 <> s2
+WITH s1, s2
+LIMIT 10
+CREATE (s1)-[:INTERNSHIP_AT]->(s2)
+
+
+
+
+
+
+
+
+
+CREATE (:Student {name: "John Doe", college: "ABC University", place: "City A"})
+CREATE (:Student {name: "Jane Smith", college: "XYZ College", place: "City B"})
+CREATE (:Student {name: "David Johnson", college: "PQR Institute", place: "City C"})
+CREATE (:Student {name: "Sarah Brown", college: "LMN University", place: "City D"})
+CREATE (:Student {name: "Michael Wilson", college: "EFG College", place: "City E"})
+CREATE (:Student {name: "Emily Davis", college: "UVW Institute", place: "City F"})
+CREATE (:Student {name: "Daniel Taylor", college: "HIJ University", place: "City G"})
+CREATE (:Student {name: "Olivia Lee", college: "KLM College", place: "City H"})
+CREATE (:Student {name: "Matthew Clark", college: "NOP Institute", place: "City I"})
+CREATE (:Student {name: "Sophia Lewis", college: "QRS University", place: "City J"})
+CREATE (:Student {name: "James Martinez", college: "TUV College", place: "City K"})
+CREATE (:Student {name: "Ava Hall", college: "XYZ Institute", place: "City L"})
+CREATE (:Student {name: "William Mitchell", college: "ABC University", place: "City M"})
+CREATE (:Student {name: "Isabella Scott", college: "PQR College", place: "City N"})
+CREATE (:Student {name: "Daniel Thompson", college: "LMN Institute", place: "City O"})
+CREATE (:Student {name: "Mia Walker", college: "EFG University", place: "City P"})
+CREATE (:Student {name: "Alexander Adams", college: "UVW College", place: "City Q"})
+CREATE (:Student {name: "Sofia Hill", college: "HIJ Institute", place: "City R"})
+CREATE (:Student {name: "Ethan Turner", college: "KLM University", place: "City S"})
+CREATE (:Student {name: "Charlotte Baker", college: "NOP College", place: "City T"})
+
+MATCH (s1:Student {name: "John Doe"}), (s2:Student {name: "Jane Smith"})
+CREATE (s1)-[:INTERNSHIP_AT]->(s2)
+
+MATCH (s1:Student {name: "John Doe"}), (s3:Student {name: "David Johnson"})
+CREATE (s1)-[:INTERNSHIP_AT]->(s3)
+
+MATCH (s1:Student {name: "John Doe"}), (s4:Student {name: "Sarah Brown"})
+CREATE (s1)-[:INTERNSHIP_AT]->(s4)
+
+MATCH (s1:Student {name: "John Doe"}), (s5:Student {name: "Michael Wilson"})
+CREATE (s1)-[:INTERNSHIP_AT]->(s5)
+
+MATCH (s2:Student {name: "Jane Smith"}), (s6:Student {name: "Emily Davis"})
+CREATE (s2)-[:INTERNSHIP_AT]->(s6)
+
+MATCH (s2:Student {name: "Jane Smith"}), (s7:Student {name: "Daniel Taylor"})
+CREATE (s2)-[:INTERNSHIP_AT]->(s7)
+
+MATCH (s2:Student {name: "Jane Smith"}), (s8:Student {name: "Olivia Lee"})
+CREATE (s2
+
