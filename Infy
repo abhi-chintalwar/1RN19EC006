@@ -1,0 +1,46 @@
+// Create students
+CREATE (:Student {name: 'Alice', college: 'College A', place: 'Place 1'})
+CREATE (:Student {name: 'Bob', college: 'College B', place: 'Place 2'})
+CREATE (:Student {name: 'Carol', college: 'College A', place: 'Place 1'})
+CREATE (:Student {name: 'Dave', college: 'College C', place: 'Place 1'})
+CREATE (:Student {name: 'Eve', college: 'College D', place: 'Place 3'})
+CREATE (:Student {name: 'Frank', college: 'College E', place: 'Place 2'})
+CREATE (:Student {name: 'Grace', college: 'College F', place: 'Place 2'})
+CREATE (:Student {name: 'Henry', college: 'College G', place: 'Place 3'})
+CREATE (:Student {name: 'Ivy', college: 'College A', place: 'Place 1'})
+CREATE (:Student {name: 'Jack', college: 'College B', place: 'Place 2'})
+CREATE (:Student {name: 'Kelly', college: 'College H', place: 'Place 3'})
+
+// Create company
+CREATE (:Company {name: 'XYZ Company', place: 'Place 1'})
+
+// Create relationships
+MATCH (s:Student {name: 'Alice'}), (c:Company {place: 'Place 1'})
+CREATE (s)-[:INTERNSHIP_AT]->(c)
+
+MATCH (s:Student {name: 'Carol'}), (c:Company {place: 'Place 1'})
+CREATE (s)-[:INTERNSHIP_AT]->(c)
+
+MATCH (s:Student {name: 'Dave'}), (c:Company {place: 'Place 1'})
+CREATE (s)-[:INTERNSHIP_AT]->(c)
+
+MATCH (s:Student {name: 'Ivy'}), (c:Company {place: 'Place 1'})
+CREATE (s)-[:INTERNSHIP_AT]->(c)
+
+MATCH (s:Student {name: 'Bob'}), (c:Company {place: 'Place 2'})
+CREATE (s)-[:INTERNSHIP_AT]->(c)
+
+MATCH (s:Student {name: 'Frank'}), (c:Company {place: 'Place 2'})
+CREATE (s)-[:INTERNSHIP_AT]->(c)
+
+MATCH (s:Student {name: 'Grace'}), (c:Company {place: 'Place 2'})
+CREATE (s)-[:INTERNSHIP_AT]->(c)
+
+MATCH (s:Student {name: 'Eve'}), (c:Company {place: 'Place 3'})
+CREATE (s)-[:INTERNSHIP_AT]->(c)
+
+MATCH (s:Student {name: 'Henry'}), (c:Company {place: 'Place 3'})
+CREATE (s)-[:INTERNSHIP_AT]->(c)
+
+MATCH (s:Student {name: 'Kelly'}), (c:Company {place: 'Place 3'})
+CREATE (s)-[:INTERNSHIP_AT]->(c)
