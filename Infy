@@ -287,3 +287,341 @@ CREATE (s2)-[:INTERNSHIP_AT]->(s7)
 MATCH (s2:Student {name: "Jane Smith"}), (s8:Student {name: "Olivia Lee"})
 CREATE (s2
 
+
+
+
+
+
+MATCH (a:Person {name: "Alice"}), (b:Person {name: "Bob"})
+CREATE (a)-[:FRIEND]->(b)
+
+MATCH (a:Person {name: "Alice"}), (c:Person {name: "Charlie"})
+CREATE (a)-[:FRIEND]->(c)
+
+MATCH (a:Person {name: "Bob"}), (d:Person {name: "David"})
+CREATE (a)-[:FRIEND]->(d)
+
+MATCH (b:Person {name: "Bob"}), (e:Person {name: "Eve"})
+CREATE (b)-[:FRIEND]->(e)
+
+MATCH (c:Person {name: "Charlie"}), (f:Person {name: "Frank"})
+CREATE (c)-[:FRIEND]->(f)
+
+MATCH (d:Person {name: "David"}), (g:Person {name: "Grace"})
+CREATE (d)-[:FRIEND]->(g)
+
+MATCH (e:Person {name: "Eve"}), (h:Person {name: "Henry"})
+CREATE (e)-[:FRIEND]->(h)
+
+MATCH (f:Person {name: "Frank"}), (i:Person {name: "Ivy"})
+CREATE (f)-[:FRIEND]->(i)
+
+MATCH (g:Person {name: "Grace"}), (j:Person {name: "Jack"})
+CREATE (g)-[:FRIEND]->(j)
+
+MATCH (h:Person {name: "Henry"}), (k:Person {name: "Karen"})
+CREATE (h)-[:FRIEND]->(k)
+
+MATCH (i:Person {name: "Ivy"}), (l:Person {name: "Liam"})
+CREATE (i)-[:FRIEND]->(l)
+
+MATCH (j:Person {name: "Jack"}), (m:Person {name: "Mia"})
+CREATE (j)-[:FRIEND]->(m)
+
+MATCH (k:Person {name: "Karen"}), (n:Person {name: "Nathan"})
+CREATE (k)-[:FRIEND]->(n)
+
+MATCH (l:Person {name: "Liam"}), (o:Person {name: "Olivia"})
+CREATE (l)-[:FRIEND]->(o)
+
+MATCH (m:Person {name: "Mia"}), (p:Person {name: "Nathan"})
+CREATE (m)-[:FRIEND]->(p)
+
+
+11
+
+
+
+
+
+
+MATCH (a:Person {name: "Alice"}), (b:Person {name: "Bob"})
+CREATE (a)-[:FRIEND]->(b),
+       (a)-[:COLLEAGUE]->(b),
+       (a)-[:NEIGHBOR]->(b)
+
+MATCH (a:Person {name: "Alice"}), (c:Person {name: "Charlie"})
+CREATE (a)-[:FRIEND]->(c),
+       (a)-[:SIBLING]->(c),
+       (a)-[:CO-WORKER]->(c)
+
+MATCH (a:Person {name: "Bob"}), (d:Person {name: "David"})
+CREATE (a)-[:FRIEND]->(d),
+       (a)-[:COLLEAGUE]->(d),
+       (a)-[:CLASSMATE]->(d)
+
+MATCH (b:Person {name: "Bob"}), (e:Person {name: "Eve"})
+CREATE (b)-[:FRIEND]->(e),
+       (b)-[:NEIGHBOR]->(e),
+       (b)-[:CO-WORKER]->(e)
+
+MATCH (c:Person {name: "Charlie"}), (f:Person {name: "Frank"})
+CREATE (c)-[:FRIEND]->(f),
+       (c)-[:SIBLING]->(f),
+       (c)-[:COLLEAGUE]->(f)
+
+MATCH (d:Person {name: "David"}), (g:Person {name: "Grace"})
+CREATE (d)-[:FRIEND]->(g),
+       (d)-[:CO-WORKER]->(g),
+       (d)-[:CLASSMATE]->(g)
+
+MATCH (e:Person {name: "Eve"}), (h:Person {name: "Henry"})
+CREATE (e)-[:FRIEND]->(h),
+       (e)-[:NEIGHBOR]->(h),
+       (e)-[:SIBLING]->(h)
+
+MATCH (f:Person {name: "Frank"}), (i:Person {name: "Ivy"})
+CREATE (f)-[:FRIEND]->(i),
+       (f)-[:COLLEAGUE]->(i),
+       (f)-[:NEIGHBOR]->(i)
+
+MATCH (g:Person {name: "Grace"}), (j:Person {name: "Jack"})
+CREATE (g)-[:FRIEND]->(j),
+       (g)-[:CLASSMATE]->(j),
+       (g)-[:CO-WORKER]->(j)
+
+MATCH (h:Person {name: "Henry"}), (k:Person {name: "Karen"})
+CREATE (h)-[:FRIEND]->(k),
+       (h)-[:NEIGHBOR]->(k),
+       (h)-[:COLLEAGUE]->(k)
+
+MATCH (i:Person {name: "Ivy"}), (l:Person {name: "Liam"})
+CREATE (i)-[:FRIEND]->(l),
+       (i)-[:SIBLING]->(l),
+       (i)-[:CLASSMATE]->(l)
+
+MATCH (j:Person {name: "Jack"}), (m:Person {name: "Mia"})
+CREATE (j)-[:FRIEND]->(m),
+       (j)-[:CO-WORKER]->(m),
+       (j)-[:NEIGHBOR]->(m)
+
+MATCH (k:Person {name: "Karen"}), (n:Person {name: "Nathan"})
+CREATE (k)-[:FRIEND]->(n),
+       (k)-[:COLLEAGUE]->(n),
+       (k)-[:SIBLING]->(n)
+
+MATCH (l:Person {name: "Liam"}), (o:Person {name: "Olivia"})
+CREATE (l)-[:FRIEND]->(o),
+       (l)-[:NEIGHBOR]->(o),
+       (l)-[:CLASSMATE]->(o)
+
+MATCH (m:Person {name: "Mia"}), (p:Person {name: "Nathan"})
+CREATE (m)-[:FRIEND]->(p),
+       (m)-[:CO-WORKER]->(p),
+       (m)-[:SIBLING]->(p)
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Neo4j Visualization with Vis.js</title>
+  <style type="text/css">
+    #visualization {
+      width: 800px;
+      height: 600px;
+      border: 1px solid lightgray;
+    }
+  </style>
+</head>
+<body>
+  <div id="visualization"></div>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <script>
+    // Neo4j data
+    var nodes = [
+      { id: 1, label: 'Alice' },
+      { id: 2, label: 'Bob' },
+      { id: 3, label: 'Charlie' },
+      { id: 4, label: 'David' },
+      { id: 5, label: 'Eve' },
+      { id: 6, label: 'Frank' },
+      { id: 7, label: 'Grace' },
+      { id: 8, label: 'Henry' },
+      { id: 9, label: 'Ivy' },
+      { id: 10, label: 'Jack' },
+      { id: 11, label: 'Karen' },
+      { id: 12, label: 'Liam' },
+      { id: 13, label: 'Mia' },
+      { id: 14, label: 'Nathan' },
+      { id: 15, label: 'Olivia' }
+    ];
+
+    var edges = [
+      { from: 1, to: 2, label: 'FRIEND' },
+      { from: 1, to: 3, label: 'FRIEND' },
+      { from: 1, to: 4, label: 'FRIEND' },
+      { from: 2, to: 3, label: 'FRIEND' },
+      { from: 2, to: 4, label: 'FRIEND' },
+      { from: 2, to: 5, label: 'FRIEND' },
+      { from: 3, to: 4, label: 'FRIEND' },
+      { from: 3, to: 6, label: 'FRIEND' },
+      { from: 3, to: 7, label: 'FRIEND' },
+      { from: 4, to: 5, label: 'FRIEND' },
+      { from: 4, to: 6, label: 'FRIEND' },
+      { from: 4, to: 7, label: 'FRIEND' },
+      { from: 5, to: 6, label: 'FRIEND' },
+      { from: 5, to: 7, label: 'FRIEND' },
+      { from: 5, to: 8, label: 'FRIEND' },
+      { from: 6, to: 7, label: 'FRIEND' },
+      { from: 6, to: 8, label: 'FRIEND' },
+      { from: 6, to: 9, label: 'FRIEND' },
+      { from: 7, to: 8, label: 'FRIEND' },
+      { from: 7, to: 9, label: 'FRIEND' },
+      { from: 7, to: 10, label: 'FRIEND' },
+      { from: 8, to: 9, label: 'FRIEND' },
+      { from: 8, to: 10, label: 'FRIEND' },
+      { from: 8, to: 11, label: 'FRIEND' },
+      { from: 9, to: 10, label: 'FRIEND' },
+      { from: 9, to: 11, label: 'FRIEND' },
+      { from: 9, to: 12, label: 'FRIEND' },
+      { from: 10, to: 11, label: 'FRIEND' },
+      { from: 10, to: 12, label: 'FRIEND' },
+      { from: 10, to: 13, label: 'FRIEND' },
+      { from: 11, to: 12, label: 'FRIEND' },
+      { from: 11, to: 13, label: 'FRIEND' },
+      { from: 11, to: 14, label: 'FRIEND' },
+      { from: 12, to: 13, label: 'FRIEND' },
+      { from: 12, to: 14, label: 'FRIEND' },
+      { from: 12, to: 15, label: 'FRIEND' },
+      { from: 13, to: 14, label: 'FRIEND' },
+      { from: 13, to: 15, label: 'FRIEND' },
+      { from: 14, to: 15, label: 'FRIEND' }
+    ];
+
+    var data = {
+      nodes: nodes,
+      edges: edges
+    };
+
+    // Visualization options
+    var options = {
+      nodes: {
+        shape: 'dot',
+        size: 30,
+        font: {
+          size: 14,
+          color: '#ffffff'
+        },
+        borderWidth: 2
+      },
+      edges: {
+        width: 2
+      }
+    };
+
+    // Create a network
+    var container = document.getElementById('visualization');
+    var network = new vis.Network(container, data, options);
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Neo4j Visualization with Vis.js</title>
+  <style type="text/css">
+    #visualization {
+      width: 800px;
+      height: 600px;
+      border: 1px solid lightgray;
+    }
+  </style>
+</head>
+<body>
+  <div id="visualization"></div>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <script src="data.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
+
+
+
+
+var nodes = [
+  { id: 1, label: 'Alice' },
+  { id: 2, label: 'Bob' },
+  { id: 3, label: 'Charlie' },
+  { id: 4, label: 'David' },
+  { id: 5, label: 'Eve' },
+  { id: 6, label: 'Frank' },
+  { id: 7, label: 'Grace' },
+  { id: 8, label: 'Henry' },
+  { id: 9, label: 'Ivy' },
+  { id: 10, label: 'Jack' },
+  { id: 11, label: 'Karen' },
+  { id: 12, label: 'Liam' },
+  { id: 13, label: 'Mia' },
+  { id: 14, label: 'Nathan' },
+  { id: 15, label: 'Olivia' }
+];
+
+var edges = [
+  { from: 1, to: 2, label: 'FRIEND' },
+  { from: 1, to: 2, label: 'COLLEAGUE' },
+  { from: 1, to: 2, label: 'NEIGHBOR' },
+  // Add more relationships here...
+];
+
+var data = {
+  nodes: nodes,
+  edges: edges
+};
+
+
+
+
+var container = document.getElementById('visualization');
+var options = {
+  nodes: {
+    shape: 'dot',
+    size: 30,
+    font: {
+      size: 14,
+      color: '#ffffff'
+    },
+    borderWidth: 2
+  },
+  edges: {
+    width: 2
+  }
+};
+var network = new vis.Network(container, data, options);
+
+
+
+
+
+
+
