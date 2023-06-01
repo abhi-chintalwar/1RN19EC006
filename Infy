@@ -644,4 +644,106 @@ CREATE (:Person {name: "Olivia", age: 36})
 
 
 
+133456788
+
+
+
+
+
+
+
+
+const express = require('express');
+const neo4j = require('neo4j-driver');
+
+// Neo4j configuration
+const neo4jUri = 'bolt://localhost:7687'; // Replace with your Neo4j URI
+const neo4jUser = 'neo4j'; // Replace with your Neo4j username
+const neo4jPassword = 'password'; // Replace with your Neo4j password
+
+// Create a Neo4j driver instance
+const driver = neo4j.driver(neo4jUri, neo4j.auth.basic(neo4jUser, neo4jPassword));
+
+// Create Express.js app
+const app = express();
+
+// REST API endpoint to retrieve Neo4j data
+app.get('/api/graph', async (req, res) => {
+  const session = driver.session();
+
+  try {
+    const result = await session.run('MATCH (n) RETURN n');
+
+    const nodes = result.records.map(record => {
+      const node = record.get('n');
+      return {
+        id: node.identity.toString(),
+        label: node.properties.name
+      };
+    });
+
+    const edges = [];
+
+    res.json({ nodes, edges });
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred' });
+  } finally {
+    session.close();
+  }
+});
+
+// Start the server
+app.listen(3000, () => {
+  console.log('Server started on port 3000');
+});
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Neo4j Visualization with Vis.js</title>
+  <style type="text/css">
+    #visualization {
+      width: 800px;
+      height: 600px;
+      border: 1px solid lightgray;
+    }
+  </style>
+</head>
+<body>
+  <div id="visualization"></div>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <script>
+    // Retrieve data from the server
+    fetch('/api/graph')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('visualization');
+        const options = {
+          nodes: {
+            shape: 'dot',
+            size: 30,
+            font: {
+              size: 14,
+              color: '#ffffff'
+            },
+            borderWidth: 2
+          },
+          edges: {
+            width: 2
+          }
+        };
+        const network = new vis.Network(container, data, options);
+      })
+      .catch(error => {
+        console.error('An error occurred:', error);
+      });
+  </script>
+</body>
+</html>
+
 
