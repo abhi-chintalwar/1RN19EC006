@@ -1000,3 +1000,84 @@ for record in result:
 # Visualize the graph
 net.show("graph.html")
 
+
+
+
+1
+1
+1
+
+
+
+// Neo4j connection details
+const neo4j = require('neo4j-driver');
+const driver = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic('your_username', 'your_password'));
+
+// Neo4j query to fetch nodes
+const neo4jQuery = `
+MATCH (n)
+RETURN n
+`;
+
+// Create an empty array to store the nodes
+const nodes = [];
+
+// Execute the query and fetch the nodes
+const session = driver.session();
+session
+  .run(neo4jQuery)
+  .subscribe({
+    onNext: (record) => {
+      const node = record.get('n');
+      
+      // Add nodes
+      nodes.push({
+        id: node.identity.toString(),
+        label: node.labels[0],
+        title: JSON.stringify(node.properties)
+      });
+    },
+    onCompleted: () => {
+      session.close();
+
+      // Create a Vis.js data object
+      const data = {
+        nodes: nodes,
+        edges: []
+      };
+
+      // Create a Vis.js network
+      const container = document.getElementById('network');
+      const options = {};
+      const network = new vis.Network(container, data, options);
+    },
+    onError: (error) => {
+      console.error(error);
+    }
+  });
+  
+  
+  
+  
+  
+  
+  
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Neo4j Visualization</title>
+  <style>
+    #network {
+      width: 800px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="network"></div>
+  <script src="https://cdn.jsdelivr.net/npm/vis-network@9.5.1/dist/vis-network.min.js"></script>
+  <script src="https://unpkg.com/neo4j-driver@4.3.1/dist/neo4j-driver.min.js"></script>
+  <script src="path/to/your/javascript/file.js"></script>
+</body>
+</html>
+ 
