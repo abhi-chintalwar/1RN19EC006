@@ -961,3 +961,42 @@ app.get('/api/graph', async (req, res) => {
 app.listen(3000, () => {
   console.log('Server started on port 3000');
 });
+
+
+
+9999999o
+
+
+
+from pyvis.network import Network
+from neo4j import GraphDatabase
+
+# Neo4j configuration
+neo4j_uri = "bolt://localhost:7687"  # Replace with your Neo4j URI
+neo4j_user = "neo4j"  # Replace with your Neo4j username
+neo4j_password = "password"  # Replace with your Neo4j password
+
+# Connect to Neo4j database
+driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
+session = driver.session()
+
+# Retrieve graph data from Neo4j
+query = "MATCH (n)-[r]->(m) RETURN n, r, m"
+result = session.run(query)
+
+# Create a PyVis network
+net = Network(height="600px", width="800px")
+
+# Add nodes and edges to the network
+for record in result:
+    source_node = record["n"]
+    relationship = record["r"]
+    target_node = record["m"]
+
+    net.add_node(source_node.id, label=source_node.get("name"))
+    net.add_node(target_node.id, label=target_node.get("name"))
+    net.add_edge(source_node.id, target_node.id, label=relationship.type)
+
+# Visualize the graph
+net.show("graph.html")
+
