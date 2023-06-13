@@ -1,3 +1,110 @@
+    1.Setting up Neo4j Database: 
+		First, we need to install and set up Neo4j, which is a graph database. We can download Neo4j Community Edition from their official website and follow the installation instructions.
+
+    2.Creating the Dummy Database: 
+		Once Neo4j is installed, we can create a dummy database by importing sample data or manually adding nodes and relationships. This will provide us with a dataset to work with during development.
+
+    3.Java and Spring Backend: 
+		In the backend, we will use Java and the Spring Framework to create a RESTful API that interacts with the Neo4j database. The backend will handle incoming requests, execute Cypher Query Language (CQL) queries against the Neo4j database, and return the query results.
+
+    4.UI Frontend: 
+		On the frontend, we will create a user interface using HTML, CSS, and JavaScript. The UI will consist of a textbox where users can enter CQL queries and a button to submit the query.
+
+    5.Query Execution: 
+		When the user submits a query from the frontend, the UI will send an HTTP request to the backend API, passing the entered CQL query as a parameter. The backend API will receive the query, execute it against the Neo4j database, and retrieve the results.
+
+    6.Protobuf: 
+		Instead of directly sending the query results back to the frontend, the backend will serialize the query results into a Protobuf (Protocol Buffers) message. Protobuf is a language-agnostic binary serialization format that allows for efficient data transfer between systems.
+
+    7.UI Message Display:
+		 While the backend is executing the query and generating the Protobuf message, the UI should display a message indicating that the query is being executed. This will provide feedback to the user and prevent them from submitting multiple queries simultaneously.
+
+    8.Receiving Protobuf and Fetching Web Assembly: 
+		Once the UI receives the Protobuf message from the backend, it will parse and process it. The Protobuf message will contain information about the nodes and relationships in the graph. The UI will then use this information to fetch a WebAssembly file.
+
+    9.WebAssembly and Web Workers: 
+		WebAssembly (WASM) is a binary instruction format that allows running high-performance code on the web. In this project, we will use a WebAssembly file that contains the logic to render the graph visualization. To prevent blocking the UI thread, we will use web workers, which are background JavaScript threads, to execute the WebAssembly code and generate the graph visualization.
+
+    10.Graph Visualization with vis.js: 
+		The UI, using the WebAssembly file and web workers, will create a graph visualization using the vis.js library. vis.js is a JavaScript library that provides powerful tools for rendering interactive network graphs. The UI will utilize the data from the Protobuf message to populate the graph and display it on the frontend.
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+To summarize the workflow:
+
+    	1.User enters a CQL query in the UI.
+    
+	2.UI sends the query to the backend API.
+    	
+	3.Backend executes the query and generates a Protobuf message.
+    
+	4.UI displays a "query is being executed" message.
+    
+	5.Backend sends the Protobuf message to the UI.
+    	
+	6.UI parses the Protobuf message and fetches the WebAssembly file.
+    
+	7.UI uses web workers to execute the WebAssembly code.
+    
+	8.UI utilizes vis.js to create the graph visualization based on the Protobuf data.
+    
+	9.UI displays the graph visualization to the user.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    Backend: 
+		we have a Neo4j database and a backend server implemented in Java and Spring. The backend server receives CQL queries from the frontend.
+
+    Backend Processing:
+		The backend server processes the CQL query and retrieves the necessary data from the Neo4j database. It then converts the data into Protobuf format.
+
+    Backend Response: 
+		The backend server sends the Protobuf data as a response to the frontend.
+
+    Frontend: 
+		The frontend, implemented in HTML, JavaScript, and CSS, consists of an interface with a text box for entering CQL queries and a button to execute the query.
+
+    Execute Query: 
+		When the user clicks the "Execute Query" button, the frontend sends an HTTP request to the backend server with the CQL query.
+
+    Backend Processing: 
+		The backend server receives the CQL query, executes it on the Neo4j database, and converts the retrieved data into Protobuf format.
+
+    Backend Response: 
+		The backend server sends the Protobuf data back to the frontend as the response to the HTTP request.
+
+    Frontend Processing: 
+		The frontend receives the Protobuf data from the backend response.
+
+    WebAssembly Processing: 
+		The frontend uses a WebAssembly file to process the Protobuf data and generate the graph data in the format expected by Vis.js.
+
+    Visualization: 
+		The frontend provides the generated graph data to Vis.js, which renders the graph on the user interface using the HTML and CSS provided.
+
+		So, the WebAssembly file is responsible for processing the Protobuf data received from the backend and converting it into a format that can be visualized by Vis.js. The generated graph data, in the expected format, is then passed to Vis.js for visualization on the frontend.
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------
+
+
+
+
+
+
+
 // Create students
 CREATE (:Student {name: 'Alice', college: 'College A', place: 'Place 1'})
 CREATE (:Student {name: 'Bob', college: 'College B', place: 'Place 2'})
