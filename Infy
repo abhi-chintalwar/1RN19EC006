@@ -1,4 +1,139 @@
-    1.Setting up Neo4j Database: 
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Neo4j Query Execution</title>
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <h1>Neo4j Query Execution</h1>
+    <input type="text" id="queryInput" />
+    <button onclick="executeQuery()">Execute Query</button>
+    <div id="loadingMessage"></div>
+    <div id="graph"></div>
+  </body>
+</html>
+
+
+
+
+// Function to execute the CQL query and fetch the Protobuf file
+function executeQuery() {
+  const query = document.getElementById("queryInput").value;
+
+  // Display loading message
+  const loadingMessageDiv = document.getElementById("loadingMessage");
+  loadingMessageDiv.innerText = "Executing query...";
+
+  fetch("/query", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(query),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error executing query");
+      }
+      return response.blob(); // Get the response as a Blob
+    })
+    .then((blob) => {
+      // Create a new file object from the Blob
+      const file = new File([blob], "graphData.pb", {
+        type: "application/octet-stream",
+      });
+
+      // Use the file to fetch the WebAssembly file and visualize the graph
+      fetchGraphVisualization(file);
+    })
+    .catch((error) => {
+      console.error("Error executing query:", error);
+      loadingMessageDiv.innerText = "Error executing query";
+    });
+}
+
+// Function to fetch the WebAssembly file and visualize the graph
+function fetchGraphVisualization(protobufFile) {
+  // Fetch the WebAssembly file
+  fetch("/wasm/graphVisualization.wasm")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching WebAssembly file");
+      }
+      return response.arrayBuffer();
+    })
+    .then((wasmBuffer) => {
+      // Process the Protobuf file and the WebAssembly file to visualize the graph
+      processGraphData(protobufFile, wasmBuffer);
+    })
+    .catch((error) => {
+      console.error("Error fetching WebAssembly file:", error);
+      document.getElementById("loadingMessage").innerText =
+        "Error fetching WebAssembly file";
+    });
+}
+
+// Function to process the Protobuf file and visualize the graph
+function processGraphData(protobufFile, wasmBuffer) {
+  // Convert the Protobuf file to an ArrayBuffer
+  const reader = new FileReader();
+  reader.onload = function () {
+    const protobufData = reader.result;
+
+    // Call the WebAssembly function to render the graph
+    const wasmInstance = new WebAssembly.Instance(wasmBuffer);
+    wasmInstance.exports.renderGraph(protobufData);
+  };
+  reader.readAsArrayBuffer(protobufFile);
+}
+
+
+
+
+
+/* Example styles */
+body {
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  color: #333;
+}
+
+input[type="text"] {
+  width: 300px;
+  padding: 5px;
+  margin-right: 10px;
+}
+
+button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+#loadingMessage {
+  margin-top: 10px;
+}
+
+
+
+
+
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+1.Setting up Neo4j Database: 
 		First, we need to install and set up Neo4j, which is a graph database. We can download Neo4j Community Edition from their official website and follow the installation instructions.
 
     2.Creating the Dummy Database: 
