@@ -1,3 +1,421 @@
+#the code that is used to send the query to the back end in json format:
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Graph Visualization</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    #messageForm {
+      max-width: 400px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #statusMessage {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Query Form</h1>
+  <form id="messageForm">
+    <label for="message">Enter your Query:</label>
+    <input type="text" id="message" name="message" required>
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="statusMessage"></div>
+
+  <script>
+    function submitForm(event) {
+      event.preventDefault();
+
+      const messageInput = document.getElementById('message');
+      const message = messageInput.value;
+
+      const data = {
+        Query: message
+      };
+
+      const statusMessage = document.getElementById('statusMessage');
+      statusMessage.textContent = 'Query is being fetched...';
+
+      fetch('/executeQuery', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (response.ok) {
+          statusMessage.textContent = 'Query fetched successfully';
+          // Handle the response from the backend if needed
+          console.log('Data sent successfully');
+        } else {
+          statusMessage.textContent = 'Failed to fetch query';
+          throw new Error('Request failed');
+        }
+      })
+      .catch(error => {
+        statusMessage.textContent = 'Failed to fetch query';
+        console.error('Error:', error.message);
+      });
+    }
+
+    const form = document.getElementById('messageForm');
+    form.addEventListener('submit', submitForm);
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+22222222222222222
+
+
+#the code to send the received protobuf file to another backend endpoint and fetch a WebAssembly (Wasm) file in return:
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Query Form</title>
+    <style>
+        /* ... CSS styles ... */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        #messageForm {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #statusMessage {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Query Form</h1>
+    <form id="messageForm">
+        <label for="message">Enter your Query:</label>
+        <input type="text" id="message" name="message" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="statusMessage"></div>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+
+            const messageInput = document.getElementById('message');
+            const message = messageInput.value;
+
+            const data = {
+                Query: message
+            };
+
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.textContent = 'Query is being fetched...';
+
+            fetch('/executeQuery', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob(); // Retrieve the response body as a Blob
+                    } else {
+                        throw new Error('Request failed');
+                    }
+                })
+                .then(blobData => {
+                    statusMessage.textContent = 'Query fetched successfully. Sending protobuf file to backend...';
+                    return fetch('/uploadProtobuf', {
+                        method: 'POST',
+                        body: blobData
+                    });
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob(); // Retrieve the response body as a Blob
+                    } else {
+                        throw new Error('Failed to upload protobuf file');
+                    }
+                })
+                .then(wasmBlob => {
+                    statusMessage.textContent = 'Protobuf file uploaded successfully. Fetching WebAssembly (Wasm) file...';
+                    // Process the wasmBlob (Wasm file) as needed
+                    // For example, you can save it or use it with vis.js for visualization
+                    console.log('Wasm file received:', wasmBlob);
+                })
+                .catch(error => {
+                    statusMessage.textContent = 'Error occurred during the process';
+                    console.error('Error:', error.message);
+                });
+        }
+
+        const form = document.getElementById('messageForm');
+        form.addEventListener('submit', submitForm);
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+55555555555555555555555
+
+
+
+
+
+
+#the code that retrieves a protobuf file as the response:
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Query Form</title>
+    <style>
+        /* ... CSS styles ... */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        #messageForm {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #statusMessage {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Query Form</h1>
+    <form id="messageForm">
+        <label for="message">Enter your Query:</label>
+        <input type="text" id="message" name="message" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="statusMessage"></div>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+
+            const messageInput = document.getElementById('message');
+            const message = messageInput.value;
+
+            const data = {
+                Query: message
+            };
+
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.textContent = 'Query is being fetched...';
+
+            fetch('/executeQuery', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob(); // Retrieve the response body as a Blob
+                    } else {
+                        throw new Error('Request failed');
+                    }
+                })
+                .then(blobData => {
+                    statusMessage.textContent = 'Query fetched successfully';
+                    // Process the blobData (protobuf file) as needed
+                    // For example, you can save it or use a protobuf library to work with it
+                    console.log('Protobuf file received:', blobData);
+                })
+                .catch(error => {
+                    statusMessage.textContent = 'Failed to fetch query';
+                    console.error('Error:', error.message);
+                });
+        }
+
+        const form = document.getElementById('messageForm');
+        form.addEventListener('submit', submitForm);
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+33333333333333333333333333333333
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html>
 
