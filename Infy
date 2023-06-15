@@ -1,5 +1,76 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <title>Message Form</title>
+</head>
+<body>
+  <h1>Message Form</h1>
+  <form id="messageForm">
+    <label for="message">Enter your message:</label>
+    <input type="text" id="message" name="message" required>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    // Function to handle form submission
+    function submitForm(event) {
+      event.preventDefault(); // Prevent form from being submitted normally
+
+      // Get the message value from the input
+      const messageInput = document.getElementById('message');
+      const message = messageInput.value;
+
+      // Create an object to hold the message
+      const data = {
+        message: message
+      };
+
+      // Convert the data to JSON
+      const jsonData = JSON.stringify(data);
+
+      // Send an HTTP request to the backend
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/executeQuery', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          // Handle the response from the backend if needed
+          console.log(xhr.responseText);
+        }
+      };
+      xhr.send(jsonData);
+    }
+
+    // Attach the submitForm function to the form's submit event
+    const form = document.getElementById('messageForm');
+    form.addEventListener('submit', submitForm);
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
   <head>
     <title>Neo4j Query Execution</title>
     <script src="script.js"></script>
