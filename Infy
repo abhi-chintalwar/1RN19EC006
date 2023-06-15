@@ -1,5 +1,68 @@
 <!DOCTYPE html>
 <html>
+
+<head>
+    <title>Message Form</title>
+</head>
+
+<body>
+    <h1>Message Form</h1>
+    <form id="messageForm">
+        <label for="message">Enter your message:</label>
+        <input type="text" id="message" name="message" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+
+            const messageInput = document.getElementById('message');
+            const message = messageInput.value;
+
+            const data = {
+                message: message
+            };
+
+            fetch('/your-backend-endpoint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Handle the response from the backend if needed
+                        console.log('Data sent successfully');
+                    } else {
+                        throw new Error('Request failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error.message);
+                });
+        }
+
+        const form = document.getElementById('messageForm');
+        form.addEventListener('submit', submitForm);
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
 <head>
   <title>Message Form</title>
 </head>
