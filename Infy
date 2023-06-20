@@ -1,3 +1,182 @@
+<!-- the code sets up an HTML form where users can enter a query. When the form is submitted, the query is sent to the
+backend (not included in the provided code), which responds with a base64 string. The base64 string is then converted to
+JSON using a WebAssembly module. The resulting JSON data is used to create a graph visualization using vis.js, which is
+displayed in the "visualization" element on the page. -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Graph Visualization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        #messageForm {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            margin-top: 10px;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+
+        }
+
+        #statusMessage {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #visualization {
+            height: 500px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Query Form</h1>
+    <form id="messageForm">
+        <label for="message">Enter your Query:</label>
+        <input type="text" id="message" name="message" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="statusMessage"></div>
+    <div id="visualization"></div>
+
+    <script src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script>
+        // Load the WebAssembly module
+        const wasmModule = fetch('wasm_module.wasm')
+            .then(response => response.arrayBuffer())
+            .then(buffer => WebAssembly.instantiate(buffer))
+            .then(module => {
+                // Store the instantiated module
+                window.wasmModule = module;
+                console.log('Wasm module loaded successfully');
+            })
+            .catch(error => {
+                console.error('Failed to load Wasm module:', error);
+            });
+
+        // Function to convert base64 string using the loaded Wasm module
+        async function convertBase64ToJSON(base64String) {
+            const module = await wasmModule;
+            const convert = module.instance.exports.convert;
+            const base64Ptr = module.instance.exports.__allocArray(module.instance.exports.Uint8Array_ID, base64String);
+            const jsonPtr = convert(base64Ptr);
+            const jsonString = module.instance.exports.__getString(jsonPtr);
+            module.instance.exports.__free(base64Ptr);
+            module.instance.exports.__free(jsonPtr);
+            return jsonString;
+        }
+
+        // Function to process the JSON data and create a vis.js visualization
+        function createVisualization(jsonData) {
+            const data = JSON.parse(jsonData);
+
+            const dataset = new vis.DataSet(data);
+
+            const options = {
+                nodes: {
+                    shape: 'circle',
+                    color: '#4CAF50',
+                    font: {
+                        color: '#ffffff',
+                    },
+                },
+                edges: {
+                    color: '#848484',
+                },
+            };
+
+            const container = document.getElementById('visualization');
+            const network = new vis.Network(container, dataset, options);
+        }
+
+        // Function to handle form submission
+        async function submitForm(event) {
+            event.preventDefault();
+
+            const messageInput = document.getElementById('message');
+            const message = messageInput.value;
+
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.textContent = 'Query is being fetched...';
+
+            try {
+                const jsonResult = await convertBase64ToJSON(message);
+
+                createVisualization(jsonResult);
+
+                statusMessage.textContent = 'Query fetched successfully';
+            } catch (error) {
+                statusMessage.textContent = 'Failed to fetch query';
+                console.error('Error:', error);
+            }
+        }
+
+        const form = document.getElementById('messageForm');
+        form.addEventListener('submit', submitForm);
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+44444444444444444444444
 #the code that is used to send the query to the back end in json format:
 
 
