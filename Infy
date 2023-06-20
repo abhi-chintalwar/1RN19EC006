@@ -1,3 +1,33 @@
+{
+  "nodes": [
+    { "id": 1, "label": "Node 1" },
+    { "id": 2, "label": "Node 2" },
+    { "id": 3, "label": "Node 3" }
+  ],
+  "edges": [
+    { "from": 1, "to": 2 },
+    { "from": 2, "to": 3 },
+    { "from": 3, "to": 1 }
+  ]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- the code sets up an HTML form where users can enter a query. When the form is submitted, the query is sent to the
 backend (not included in the provided code), which responds with a base64 string. The base64 string is then converted to
 JSON using a WebAssembly module. The resulting JSON data is used to create a graph visualization using vis.js, which is
