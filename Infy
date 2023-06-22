@@ -1,3 +1,70 @@
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+
+
+
+
+
+
+@Configuration
+public class CorsConfiguration implements WebMvcConfigurer {
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+            .allowedOrigins("*")
+            .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowedHeaders("*");
+    }
+}
+
+
+
+
+
+
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html>
 
