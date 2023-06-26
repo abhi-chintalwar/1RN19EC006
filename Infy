@@ -1,3 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JSON Graph Visualization</title>
+  <style type="text/css">
+    #graph {
+      width: 800px;
+      height: 600px;
+      border: 1px solid lightgray;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="jsonDataInput" rows="10" cols="50"></textarea><br>
+  <button onclick="visualizeGraph()">Visualize Graph</button>
+  <div id="graph"></div>
+
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <script>
+    function visualizeGraph() {
+      const jsonDataInput = document.getElementById('jsonDataInput');
+      const jsonData = JSON.parse(jsonDataInput.value);
+
+      // Create nodes and edges arrays for vis.js
+      const nodes = jsonData.nodes.map(node => ({ id: node.id, label: node.label }));
+      const edges = jsonData.edges.map(edge => ({ from: edge.from, to: edge.to }));
+
+      // Create a network container
+      const container = document.getElementById('graph');
+
+      // Create a data object with nodes and edges
+      const data = {
+        nodes: new vis.DataSet(nodes),
+        edges: new vis.DataSet(edges),
+      };
+
+      // Set options for the graph
+      const options = {};
+
+      // Create the network
+      const network = new vis.Network(container, data, options);
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from corslib import CORSRequestHandler
 
