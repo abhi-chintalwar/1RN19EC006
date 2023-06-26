@@ -6,6 +6,162 @@
     <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <script>
         function loadConverter() {
+            const wasmFile = 'https://localhost:8000/Converter.wasm';
+            fetch(wasmFile)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch Converter.wasm');
+                    }
+                    return response.arrayBuffer();
+                })
+                .then(bytes => {
+                    const importObject = {}; // Basic import object with no additional fields
+                    return WebAssembly.instantiate(bytes, importObject);
+                })
+                .then(obj => {
+                    const { convert } = obj.instance.exports;
+                    const inputString = document.getElementById('inputString').value;
+                    const jsonString = convert(inputString);
+                    const data = JSON.parse(jsonString);
+                    visualizeGraphs(data.graphs);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+
+
+        function visualizeGraphs(graphs) {
+            const container = document.getElementById('visualization');
+            const options = {
+                nodes: {
+                    shape: 'dot',
+                    size: 30,
+                    font: {
+                        size: 14,
+                    },
+                },
+                edges: {
+                    width: 2,
+                },
+            };
+            const network = new vis.Network(container);
+
+            const nodes = new vis.DataSet();
+            const edges = new vis.DataSet();
+
+            for (const graph of graphs) {
+                for (const node of graph.nodes) {
+                    nodes.add(node);
+                }
+
+                for (const edge of graph.edges) {
+                    edges.add(edge);
+                }
+            }
+
+            const data = {
+                nodes: nodes,
+                edges: edges,
+            };
+
+            network.setOptions(options);
+            network.setData(data);
+        }
+    </script>
+    <style>
+        #visualization {
+            width: 100%;
+            height: 500px;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>String Converter Visualization</h1>
+    <label for="inputString">Enter a string:</label>
+    <input type="text" id="inputString">
+    <button onclick="loadConverter()">Convert</button>
+    <div id="visualization"></div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#!/usr/bin/env python
+try:
+    # Python 3
+    from http.server import HTTPServer, SimpleHTTPRequestHandler, test as test_orig
+    import sys
+    def test (*args):
+        test_orig(*args, port=int(sys.argv[1]) if len(sys.argv) > 1 else 8000)
+except ImportError: # Python 2
+    from BaseHTTPServer import HTTPServer, test
+    from SimpleHTTPServer import SimpleHTTPRequestHandler
+
+class CORSRequestHandler (SimpleHTTPRequestHandler):
+    def end_headers (self):
+        self.send_header('Access-Control-Allow-Origin', '*')
+        SimpleHTTPRequestHandler.end_headers(self)
+
+if __name__ == '__main__':
+    test(CORSRequestHandler, HTTPServer)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>String Converter Visualization</title>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script>
+        function loadConverter() {
             const wasmFile = 'path/to/Converter.wasm';
             fetch(wasmFile)
                 .then(response => response.arrayBuffer())
