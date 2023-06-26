@@ -1,5 +1,118 @@
 <!DOCTYPE html>
 <html>
+
+<head>
+    <title>String Converter Visualization</title>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script>
+        function loadConverter() {
+            const wasmFile = 'path/to/Converter.wasm';
+            fetch(wasmFile)
+                .then(response => response.arrayBuffer())
+                .then(bytes => {
+                    const importObject = {};
+                    return WebAssembly.instantiate(bytes, importObject);
+                })
+                .then(obj => {
+                    const { convert } = obj.instance.exports;
+                    const inputString = document.getElementById('inputString').value;
+                    const jsonString = convert(inputString);
+                    const data = JSON.parse(jsonString);
+                    visualizeGraphs(data.graphs);
+                })
+                .catch(error => {
+                    console.error('Error loading Converter.wasm:', error);
+                });
+        }
+
+        function visualizeGraphs(graphs) {
+            const container = document.getElementById('visualization');
+            const options = {
+                nodes: {
+                    shape: 'dot',
+                    size: 30,
+                    font: {
+                        size: 14,
+                    },
+                },
+                edges: {
+                    width: 2,
+                },
+            };
+            const network = new vis.Network(container);
+
+            const nodes = new vis.DataSet();
+            const edges = new vis.DataSet();
+
+            for (const graph of graphs) {
+                for (const node of graph.nodes) {
+                    nodes.add(node);
+                }
+
+                for (const edge of graph.edges) {
+                    edges.add(edge);
+                }
+            }
+
+            const data = {
+                nodes: nodes,
+                edges: edges,
+            };
+
+            network.setOptions(options);
+            network.setData(data);
+        }
+    </script>
+    <style>
+        #visualization {
+            width: 100%;
+            height: 500px;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>String Converter Visualization</h1>
+    <label for="inputString">Enter a string:</label>
+    <input type="text" id="inputString">
+    <button onclick="loadConverter()">Convert</button>
+    <div id="visualization"></div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
 <head>
   <title>JSON Graph Visualization</title>
   <style type="text/css">
