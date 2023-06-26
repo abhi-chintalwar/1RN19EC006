@@ -1,3 +1,31 @@
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+from corslib import CORSRequestHandler
+
+# Set up the CORS-enabled request handler
+Handler = CORSRequestHandler
+
+# Specify the directory path where the file is located
+directory = '/path/to/your/directory'
+
+# Create the server with the CORS-enabled handler
+server = HTTPServer(('localhost', 8000), Handler)
+
+# Start the server
+print('Server running on localhost:8000')
+server.serve_forever()
+
+
+
+
+
+
+
+
+
+
+
+
+
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
