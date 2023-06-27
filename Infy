@@ -2,6 +2,70 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
+    <title>WASM Converter</title>
+</head>
+
+<body>
+    <input type="text" id="base64Input" placeholder="Enter Base64 string">
+    <button onclick="convertBase64()">Convert</button>
+    <div id="output"></div>
+    <script src="wasm_exec.js"></script>
+    <script>
+        async function convertBase64() {
+            const base64String = document.getElementById("base64Input").value;
+
+            // Fetch the converter.wasm file from the local machine
+            const go = new Go();
+            const response = await fetch('converter.wasm');
+            const wasmBytes = await response.arrayBuffer();
+
+            // Instantiate the WebAssembly module
+            const module = await WebAssembly.compile(wasmBytes);
+            const imports = {}; // No imports required for this example
+            const instance = await WebAssembly.instantiate(module, go.importObject);
+
+            // Invoke the convert function with the base64 string as a parameter
+            const convert = instance.exports.convert;
+            const result = convert(base64String);
+
+            // Display the result on the screen
+            const outputDiv = document.getElementById("output");
+            outputDiv.textContent = result;
+        }
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
     <title>Graph Visualization</title>
     <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <style type="text/css">
