@@ -3,6 +3,141 @@
 
 <head>
     <title>Graph Visualization</title>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style type="text/css">
+        #graph {
+            height: 700px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="graph"></div>
+
+    <script type="text/javascript">
+        // Create a new network instance
+        const container = document.getElementById('graph');
+        const data = {
+            nodes: new vis.DataSet(),
+            edges: new vis.DataSet(),
+        };
+        const options = {};
+        const network = new vis.Network(container, data, options);
+
+        // Fetch the JSON data from a file
+        fetch('data.json')
+            .then(response => response.json())
+            .then(jsonData => {
+                // Iterate over the graphs in the JSON data
+                jsonData.graphs.forEach(graph => {
+                    // Iterate over the nodes in the graph
+                    graph.nodes.forEach(node => {
+                        const existingNode = data.nodes.get(node.id);
+                        if (existingNode) {
+                            // Node already exists, update its properties if necessary
+                            existingNode.label = node.name;
+                            existingNode.age = node.age;
+                            existingNode.type = node.type;
+                            data.nodes.update(existingNode);
+                        } else {
+                            // Node doesn't exist, create a new one
+                            data.nodes.add({
+                                id: node.id,
+                                label: node.name,
+                                age: node.age,
+                                type: node.type,
+                            });
+                        }
+                    });
+
+                    // Iterate over the edges in the graph
+                    graph.edges.forEach(edge => {
+                        edge.type.forEach(edgeType => {
+                            const id = `${edge.from}-${edge.to}-${edgeType}`;
+                            data.edges.add({
+                                from: edge.from,
+                                to: edge.to,
+                                label: edgeType,
+                            });
+                        });
+                    });
+                });
+
+
+
+
+                // Update the network with the new data
+                network.setData(data);
+            })
+            .catch(error => console.error('Error fetching JSON data:', error));
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Graph Visualization</title>
     <style>
         body {
             font-family: Arial, sans-serif;
